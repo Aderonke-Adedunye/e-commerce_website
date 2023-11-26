@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions,pagination,viewsets
 from . import serializers
 from . import models
 
@@ -17,7 +17,7 @@ class VendorDetail(generics.RetrieveUpdateDestroyAPIView):
 class ProductList(generics.ListCreateAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductListSerializer
-    # permission_classes = [permissions.IsAuthenticated]  # Note the 's' at the end
+    pagination_class = pagination.LimitOffsetPagination
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Product.objects.all()
@@ -35,3 +35,32 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.CustomerDetailSerializer
     # permission_classes = [permissions.IsAuthenticated]  # Note the 's' at the end
 
+#Order
+class OrderList(generics.ListCreateAPIView):
+    queryset = models.Order.objects.all()
+    serializer_class = serializers.OrderSerializer
+    # permission_classes = [permissions.IsAuthenticated]  # Note the 's' at the end
+
+
+class OrderDetail(generics.ListAPIView):
+    # queryset = models.OrderItems.objects.all()
+    serializer_class = serializers.OrderDetailSerializer
+    # permission_classes = [permissions.IsAuthenticated]  # Note the 's' at the end
+
+    def get_queryset(self):
+        order_id=self.kwargs['pk']
+        order=models.Order.objects.get(id=order_id)
+        order_items=models.OrderItems.objects.filter(order=order)
+        return order_items
+    
+class CustomerAddressViewSet(viewsets.ModelViewSet):
+        serializer_class=serializers.CustomerAddressSerializer
+        queryset=models.CustomerAddress.objects.all()
+
+
+
+class ProductRatingViewSet(viewsets.ModelViewSet):
+        serializer_class=serializers.ProductRatingSerializer
+        queryset=models.ProductRating.objects.all()
+
+        
