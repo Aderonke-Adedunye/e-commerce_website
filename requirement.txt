@@ -2,6 +2,3 @@ asgiref==3.7.2
 Django==4.2.7
 sqlparse==0.4.4
 tzdata==2023.3
-git remote add origin https://github.com/Aderonke-Adedunye/yes.git
-  git branch -M main
-  git push -u origin main
